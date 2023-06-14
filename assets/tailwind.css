@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+.card {
+  @apply p-10 border-gray-500 border-2 shadow-md rounded-xl;
+}
+@tailwind utilities;
