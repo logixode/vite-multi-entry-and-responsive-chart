@@ -28,6 +28,7 @@ export default defineConfig({
         main: resolve(root, 'index.html'),
         chart: resolve(root, 'responsive-chart/index.html'),
         simple_page: resolve(root, 'simple-chart/index.html'),
+        react_app: resolve(root, 'react-app/index.html'),
       },
     },
   },
