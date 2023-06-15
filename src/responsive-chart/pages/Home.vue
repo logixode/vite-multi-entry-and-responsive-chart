@@ -23,6 +23,9 @@
       value: [90, 80, 75, 75, 45, 35] 
     }
   ])
+  let config = ref({
+    maxX: 6
+  })
   let xAxis = ref(null)
   // xAxis.value = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
   // const getData = async () => {
@@ -66,5 +69,6 @@
   >Go to subpage</RouterLink>
   
   <!-- <Chart :series="series" :xaxis="year_list" /> -->
+  <CanvasChart :series="series" :xaxis="xAxis" :config="config" />
   <CanvasChart :series="series" :xaxis="xAxis" />
 </template>

@@ -2,7 +2,7 @@
   import {ref, onMounted} from 'vue'
   import Chart from '../assets/LineChart.js'
 
-  let props = defineProps(['xaxis', 'yaxis', 'series'])
+  let props = defineProps(['xaxis', 'yaxis', 'series', 'config'])
   let canvas = ref(null)
   let colors = [
     '#179D35', // green
@@ -22,16 +22,20 @@
         ...val,
       }
     })
-    console.log(props.xaxis);
-    new Chart({
-      target: canvas.value,
-      xAxis: props.xaxis,
-      data: series,
+    let config = {
       maxX: 10,
       maxY: 150,
       gapX: 1,
       gapY: 10,
-      padding: 20
+      padding: 20,
+      ...props.config
+    }
+    console.log(config);
+    new Chart({
+      target: canvas.value,
+      xAxis: props.xaxis,
+      data: series,
+      ...config
     })
   })
 </script>
