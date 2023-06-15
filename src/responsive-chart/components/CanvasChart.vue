@@ -32,13 +32,13 @@
       maxY: 150,
       gapX: 1,
       gapY: 10,
-      padding: 10
+      padding: 20
     })
   })
 </script>
 
 <template>
-  <div class="mt-8">
+  <div class="mt-8 canvas-wrapper">
     <canvas id="canvas" ref="canvas" width="1000" height="500" style="border: 1px solid black;"></canvas>
   </div>
 </template>

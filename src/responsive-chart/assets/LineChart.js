@@ -1,4 +1,15 @@
 export default function LineChart(val) {
+  this.init(val)  
+  this.render()
+
+  let _this = this
+  window.addEventListener("resize", function() {    
+    _this.init(val)
+    _this.render()
+  })
+}
+
+LineChart.prototype.init = function(val) {
   this.canvas = val.target
   this.xAxis = val.xAxis ?? [0] // array of string / array of int
   this.xAxisIsNumber = typeof this.xAxis[0] == 'number'
@@ -23,6 +34,7 @@ export default function LineChart(val) {
   this.pxGapY = Math.round(this.maxY / this.gapY)
   this.zeroPointX = this.chartWidth() + this.padding * 2
   this.zeroPointY = this.padding * 2
+  this.canvas.width = this.canvas.parentElement.clientWidth
   this.width = this.canvas.width - this.zeroPointX - this.padding * 2
   this.height = this.canvas.height - this.zeroPointY - this.padding * 2 - this.fontHeight
   this.scaleX = this.width / this.maxX
@@ -35,7 +47,10 @@ export default function LineChart(val) {
   console.log('scaleY', this.scaleY)
   console.log('canvas-width', this.canvas.width)
   console.log('chart-width', this.chartWidth())
+}
 
+LineChart.prototype.render = function() {
+  console.log('redraw');
   // draw x y axis and tick marks  
   this.drawXAxis()
   this.drawYAxis()
@@ -45,7 +60,7 @@ export default function LineChart(val) {
   })
 }
 
-LineChart.prototype.chartWidth = function () {
+LineChart.prototype.chartWidth = function() {
   this.context.font = this.font
   let widthPerChar = 0
   for (let n = 0; n <= this.pxGapY; n++) {
@@ -55,7 +70,7 @@ LineChart.prototype.chartWidth = function () {
   return widthPerChar
 }
 
-LineChart.prototype.drawXAxis = function () {
+LineChart.prototype.drawXAxis = function() {
   let context = this.context
   context.save()
   context.beginPath()
@@ -109,7 +124,7 @@ LineChart.prototype.drawXAxis = function () {
   context.restore()
 }
 
-LineChart.prototype.drawYAxis = function () {
+LineChart.prototype.drawYAxis = function() {
   let context = this.context
   context.save()
   context.save()
@@ -163,7 +178,7 @@ LineChart.prototype.drawYAxis = function () {
   context.restore()
 }
 
-LineChart.prototype.drawLine = function (data, color, width) {
+LineChart.prototype.drawLine = function(data, color, width) {
   let context = this.context
   context.save()
   context.lineWidth = width
