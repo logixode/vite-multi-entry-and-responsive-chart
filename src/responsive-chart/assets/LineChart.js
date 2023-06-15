@@ -17,7 +17,7 @@ LineChart.prototype.init = function(val) {
   this.highestValue = Math.max(...this.data.map(val => {
     return Math.max(...val.value)
   }))
-  this.maxX = this.xAxisIsNumber ? (val.maxX ?? this.data[0].value.length) : 250
+  this.maxX = this.xAxisIsNumber ? (val.maxX ?? this.data[0].value.length) : 100
   this.maxY = val.maxY ?? this.highestValue
   this.gapX = this.xAxisIsNumber ? val.gapX : Math.floor(this.maxX / this.xAxis.length)
   this.gapY = val.gapY
@@ -87,7 +87,7 @@ LineChart.prototype.drawXAxis = function() {
   context.stroke()
 
   // draw tick marks
-  for (let i = 0; i < this.maxX / this.gapX; i++) {
+  for (let i = 0; i < this.maxX / this.gapX-1; i++) {
     const pointX = this.gapX *(i+1)
     context.beginPath()
     context.moveTo(
@@ -107,7 +107,7 @@ LineChart.prototype.drawXAxis = function() {
   context.textAlign = "center"
   context.textBaseline = "middle"
 
-  for (let i = 0; i < this.maxX / this.gapX; i++) {
+  for (let i = 0; i < this.maxX / this.gapX+1; i++) {
     const pointX = this.gapX *(i+1)
     context.save()
     context.translate(
@@ -117,7 +117,7 @@ LineChart.prototype.drawXAxis = function() {
     if(this.xAxisIsNumber) {
       context.fillText(pointX, 0, 0)
     } else {
-      context.fillText(this.xAxis[i] ?? 's', 0, 0)
+      context.fillText(this.xAxis[i] ?? '', 0, 0)
     }
     context.restore()
   }
