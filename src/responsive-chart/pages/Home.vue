@@ -16,15 +16,15 @@
     },
     {
       lineWidth: 1,
-      value: [0, 85, 70, 80, 40, 50] 
+      value: [20, 85, 70, 80, 40, 50] 
     },
     {
       lineWidth: 1,
       value: [90, 80, 75, 75, 45, 35] 
     }
   ])
-  let xAxis = ref(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
-  
+  let xAxis = ref(null)
+  // xAxis.value = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
   // const getData = async () => {
   //   try {
   //     let res = await fetch('assets/rumah-tak-layak-huni.json');

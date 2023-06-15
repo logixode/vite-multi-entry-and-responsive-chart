@@ -40,17 +40,18 @@ LineChart.prototype.init = function(val) {
   this.scaleX = this.width / this.maxX
   this.scaleY = this.height / this.maxY
 
-  console.log('chart', this.maxX)
-  console.log('zeroPointY', this.zeroPointY)
-  console.log('width', this.width)
-  console.log('scaleX', this.scaleX)
-  console.log('scaleY', this.scaleY)
-  console.log('canvas-width', this.canvas.width)
-  console.log('chart-width', this.chartWidth())
+  // console.log('chart', this.maxX)
+  // console.log('zeroPointY', this.zeroPointY)
+  // console.log('width', this.width)
+  // console.log('scaleX', this.scaleX)
+  // console.log('scaleY', this.scaleY)
+  // console.log('canvas-width', this.canvas.width)
+  // console.log('chart-width', this.chartWidth())
 }
 
 LineChart.prototype.render = function() {
   console.log('redraw');
+
   // draw x y axis and tick marks  
   this.drawXAxis()
   this.drawYAxis()
@@ -86,8 +87,10 @@ LineChart.prototype.drawXAxis = function() {
   context.lineWidth = 2
   context.stroke()
 
+  let xAxis = this.xAxisIsNumber ? this.maxX / this.gapX : this.xAxis.length
+
   // draw tick marks
-  for (let i = 0; i < this.maxX / this.gapX-1; i++) {
+  for (let i = 0; i < xAxis; i++) {
     const pointX = this.gapX *(i+1)
     context.beginPath()
     context.moveTo(
@@ -107,8 +110,9 @@ LineChart.prototype.drawXAxis = function() {
   context.textAlign = "center"
   context.textBaseline = "middle"
 
-  for (let i = 0; i < this.maxX / this.gapX+1; i++) {
+  for (let i = 0; i < xAxis; i++) {
     const pointX = this.gapX *(i+1)
+    console.log(pointX)
     context.save()
     context.translate(
       pointX * this.scaleX + this.zeroPointX - this.fontHeight,

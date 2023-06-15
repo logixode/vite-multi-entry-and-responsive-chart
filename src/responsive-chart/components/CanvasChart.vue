@@ -14,16 +14,15 @@
   ]
 
   onMounted(() => {
-  let series = props.series.map(val => {
-    let random_num = Math.ceil(Math.random() * colors.length) - 1
+    let series = props.series.map(val => {
+      let random_num = Math.ceil(Math.random() * colors.length) - 1
 
-    console.log(colors[random_num]);
-    return {
-      color: colors[random_num],
-      ...val,
-    }
-  })
-    console.log(props.series);
+      return {
+        color: colors[random_num],
+        ...val,
+      }
+    })
+    console.log(props.xaxis);
     new Chart({
       target: canvas.value,
       xAxis: props.xaxis,
