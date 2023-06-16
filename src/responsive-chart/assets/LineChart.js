@@ -1,11 +1,29 @@
 export default function LineChart(val) {
-  this.init(val)  
-  this.render()
+  this.init(val)
+
+  // animation
+  this.diameter = 7
+  this.animationX = this.zeroPointY + this.chartWidth()
+  this.animationY = this.zeroPointY + this.height - this.chartWidth() + this.padding+3
+  this.up = true
+  this.down = false
+  this.left = false
+  this.right = true
+  this.pausedAnimation = false;
+  this.moveForward = true
+  this.interval = 100
+  this.index = 0
+
+  // handle animation frame
+  requestAnimationFrame(() => this.animation());
+  this.handleTabIsNotFocus()
 
   let _this = this
   window.addEventListener("resize", function() {    
     _this.init(val)
+    // _this.animation()
     _this.render()
+    // requestAnimationFrame(() => _this.animation());
   })
 }
 
@@ -39,19 +57,21 @@ LineChart.prototype.init = function(val) {
   this.height = this.canvas.height - this.zeroPointY - this.padding * 2 - this.fontHeight
   this.scaleX = this.width / this.maxX
   this.scaleY = this.height / this.maxY
+  
+  this.path = []
 
   // console.log('chart', this.maxX)
-  // console.log('zeroPointY', this.zeroPointY)
-  // console.log('width', this.width)
+  console.log('zeroPointY', this.zeroPointY)
+  console.log('width', this.width)
+  console.log('height', this.height)
   // console.log('scaleX', this.scaleX)
   // console.log('scaleY', this.scaleY)
   // console.log('canvas-width', this.canvas.width)
   // console.log('chart-width', this.chartWidth())
+  
 }
 
 LineChart.prototype.render = function() {
-  console.log('redraw');
-
   // draw x y axis and tick marks  
   this.drawXAxis()
   this.drawYAxis()
@@ -112,7 +132,6 @@ LineChart.prototype.drawXAxis = function() {
 
   for (let i = 0; i < xAxis; i++) {
     const pointX = this.gapX *(i+1)
-    console.log(pointX)
     context.save()
     context.translate(
       pointX * this.scaleX + this.zeroPointX - this.fontHeight,
@@ -198,13 +217,14 @@ LineChart.prototype.drawLine = function(data, color, width) {
     const pointX = this.gapX *(i+1)
     const x = this.zeroPointY + this.chartWidth() + (pointX * this.scaleX - this.fontHeight)
     const y = this.zeroPointY + this.height + (pointY * -this.scaleY)
+    this.path.push({x: x, y: y})
     context.lineTo(x, y)
     context.stroke()
     context.closePath()
 
     context.beginPath()
-    // context.fillText(`x: ${x}`, x+10, y-10)
-    // context.fillText(`y: ${y}`, x+10, y+10)
+    context.fillText(`x: ${x}`, x+10, y-10)
+    context.fillText(`y: ${y}`, x+10, y+10)
     context.arc(
       x, y,
       this.pointRadius,
@@ -220,4 +240,85 @@ LineChart.prototype.drawLine = function(data, color, width) {
     context.moveTo(x, y)
   })
   context.restore()
+}
+
+// task number 3 to create animation
+// but using pythagoras not using sine wave
+LineChart.prototype.animation = function() {
+  if(this.pausedAnimation) return
+
+  this.context.save()
+  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+  this.render()
+  this.context.beginPath()
+  this.context.strokeStyle = "salmon"
+  this.context.translate(-6, -7);  
+  this.context.arc(this.animationX + this.diameter, this.animationY + this.diameter, this.diameter, 0, Math.PI * 2)
+  this.context.stroke()
+
+  this.checkAnimationPosition()
+
+  this.context.restore()
+  // handle animation frame
+  requestAnimationFrame(() =>this.animation());
+}
+
+LineChart.prototype.checkAnimationPosition = function() {
+  let moveX = 0
+  let moveY = 0
+  if (this.moveForward) {
+    // using theorema pythagoras
+    let rightAngle = this.index == 0 ? (this.height + this.padding*2) : this.path[this.index-1].y
+    let height = rightAngle - this.path[this.index].y
+    let length = this.path[this.index].x - (this.index == 0 ? this.zeroPointX : this.path[this.index-1].x)
+    let width = Math.sqrt(height**2 + length**2)
+    
+    moveX = height < 0 ? width/height * -1 : width/height
+    moveY = height < 0 ? width/length * -1 : width/length
+    this.animationX += moveX
+    this.animationY -= moveY
+  } else if (this.path[this.index+1].moveX) {
+    this.animationX -= this.path[this.index+1].moveX
+    this.animationY += this.path[this.index+1].moveY
+  }
+  
+  if (this.index >= this.data[0].value.length && this.moveForward) {
+    this.moveForward = false
+    this.animationX = this.path[this.index-1].x
+    this.animationY = this.path[this.index-1].y
+    this.index--
+  } else if (this.index <= 0 && !this.moveForward) {
+    if (this.animationX <= this.zeroPointX) {
+      this.moveForward = true
+    }
+  } else if(
+    (this.animationX >= this.path[this.index].x) ||
+    (!this.moveForward && this.animationX <= this.path[this.index-1].x)
+  )  {
+    if (this.moveForward) {
+      this.index++
+      this.path[this.index].moveX = moveX
+      this.path[this.index].moveY = moveY
+    
+      this.animationX = this.path[this.index-1].x
+      this.animationY = this.path[this.index-1].y
+    }
+    else {
+      this.index--
+      this.animationX = this.path[this.index].x
+      this.animationY = this.path[this.index].y
+    }
+  }
+}
+
+// handle task number 4 to pause animation when tab is not focus
+// using requestAnimationFrame()
+LineChart.prototype.handleTabIsNotFocus = function() {
+  document.addEventListener("visibilitychange", () => {
+    if(document.hidden) {
+      this.pausedAnimation = true;
+    } else {
+      this.pausedAnimation = false;
+    }
+  })
 }
