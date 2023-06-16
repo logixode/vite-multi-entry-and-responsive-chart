@@ -328,3 +328,8 @@ LineChart.prototype.handleTabIsNotFocus = function() {
     }
   })
 }
+
+LineChart.prototype.animationToggle = function() {
+  requestAnimationFrame(() =>this.animation());
+  this.pausedAnimation = !this.pausedAnimation;
+}
