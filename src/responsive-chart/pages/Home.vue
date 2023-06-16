@@ -9,25 +9,27 @@
   // let year_list = ref([])
   // let city_list = ref([])
   // let series = ref([])
-  let series = ref([
+  let seriesA = ref([
     {
       lineWidth: 1,
-      value: [5, 10, 20, 40, 60, 10] 
+      value: [30, 10, 55, 40, 60, 10] 
     },
+  ])
+  let seriesB = ref([
     {
       lineWidth: 1,
       value: [20, 85, 70, 80, 40, 50] 
     },
     {
       lineWidth: 1,
-      value: [90, 80, 75, 75, 45, 35] 
+      value: [60, 80, 75, 0, 45, 35] 
     }
   ])
   let config = ref({
     maxX: 6
   })
   let xAxis = ref(null)
-  // xAxis.value = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+  xAxis.value = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
   // const getData = async () => {
   //   try {
   //     let res = await fetch('assets/rumah-tak-layak-huni.json');
@@ -69,6 +71,6 @@
   >Go to subpage</RouterLink>
   
   <!-- <Chart :series="series" :xaxis="year_list" /> -->
-  <CanvasChart :series="series" :xaxis="xAxis" :config="config" />
-  <CanvasChart :series="series" :xaxis="xAxis" />
+  <CanvasChart :series="seriesA" :config="config" />
+  <CanvasChart :series="seriesB" :xaxis="xAxis" />
 </template>
