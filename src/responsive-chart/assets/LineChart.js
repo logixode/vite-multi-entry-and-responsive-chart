@@ -223,8 +223,14 @@ LineChart.prototype.drawLine = function(data, color, width) {
     context.closePath()
 
     context.beginPath()
-    context.fillText(`x: ${x}`, x+10, y-10)
-    context.fillText(`y: ${y}`, x+10, y+10)
+    context.fillText(
+      `x: ${this.xAxisIsNumber ? i+1 : this.xAxis[i]}`, 
+      x+10, y-10
+    )
+    context.fillText(
+      `y: ${pointY}`, 
+      x+10, y+10
+    )
     context.arc(
       x, y,
       this.pointRadius,
